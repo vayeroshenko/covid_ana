@@ -9,7 +9,7 @@ populations = { "World"   : 7.774797e9,
 				"US"      : 331.002651e6,
 				"Ukraine" : 43.733762e9,
 				"Italy"	  : 60.461826e6,
-				"France"  : 65.273511		
+				"France"  : 65.273511e6		
 }
 
 def plotGraphs(plot1, plot2):
