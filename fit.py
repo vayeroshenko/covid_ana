@@ -19,9 +19,6 @@ hist_conf, hist_dead, hist_rec, legend = make_def(country)
 
 
 gStyle.SetOptStat(0)
-
-
-
 gROOT.ForceStyle()
 
 
@@ -31,13 +28,12 @@ hist_conf.Draw("MIN0 HIST E1")
 hist_rec.Draw("HIST E1 SAME")
 hist_dead.Draw("HIST E1 SAME")
 
-# func_conf = fit_hist(hist_dead, "03/05/20", "03/26/20")
-# print_slope(func_conf)
-# func_conf.Draw("same")
+func_conf = fit_hist(hist_conf, "03/05/20", "03/26/20")
+print_slope(func_conf)
+func_conf.Draw("same")
 
 legend.Draw()
 
-
-# func.Draw("SAME")
+func_conf.Draw("SAME")
 
 
