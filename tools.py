@@ -38,7 +38,7 @@ def calc_doubling(slope):
 
 
 def get_data(country, data_type):
-	path = "/home/vsevolod/Documents/Projects/COVID/COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_{}_global.csv".format(data_type)
+	path = "./COVID-19/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_{}_global.csv".format(data_type)
 	my_data = genfromtxt(path, delimiter=',', dtype=str)
 
 	time_series_number = []
