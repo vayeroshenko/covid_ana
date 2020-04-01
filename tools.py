@@ -1,15 +1,16 @@
-from numpy import genfromtxt, array
+from numpy import genfromtxt, array, linspace
 from datetime import datetime
 import time
 
-from ROOT import TGraphErrors, TF1, TMath, TCanvas, TPad, TH1D, TLegend
+from ROOT import TGraphErrors, TF1, TMath, TCanvas, TPad, TH1D, TLegend, TMinuit
 
 populations = { "World"   : 7.774797e9,
 				"China"   : 1.439323776e9,
 				"US"      : 331.002651e6,
 				"Ukraine" : 43.733762e9,
 				"Italy"	  : 60.461826e6,
-				"France"  : 65.273511e6		
+				"France"  : 65.273511e6,
+				"India"   : 1.380004385e9			
 }
 
 def plotGraphs(plot1, plot2):
@@ -88,9 +89,12 @@ def fit_kink(ranges):
 	pass
 
 def date_to_ut(date):
-	return time.mktime(datetime.strptime(date, "%m/%d/%y").timetuple())
+	dt = datetime.strptime(date, "%m/%d/%y") - datetime.strptime("01/01/1970", "%m/%d/%Y")
+	return dt.total_seconds()
 
-
+def days_between(start, finish):
+	return (datetime.strptime(finish, "%m/%d/%y") - datetime.strptime(start, "%m/%d/%y")).days
+	
 def make_hist(x, y, name, color):
 	gr = TH1D(name, name, len(x), x[0], x[-1]) 
 
@@ -146,6 +150,7 @@ def hist_from_data(country, data_type, color):
 	return make_hist(x, y, data_type, color)
 
 
+
 def make_legend(hists, names):
 	l = TLegend(0.15, 0.85, 0.4, 0.7)
 	for hist, name in zip(hists, names):
@@ -191,3 +196,113 @@ def make_def(country):
 		("confirmed", "recovered", "deaths"))
 
 	return hist_conf, hist_dead, hist_rec, legend
+
+from scipy.integrate import odeint 
+
+
+
+def draw_SIR(transition, recovery, time_range):
+	S_0 = 1.
+	I_0 = 8. / (populations["World"] - populations["China"])
+	R_0 = 0.
+
+	def func(y, t, trans, reco):
+		S, I, R = y
+		dS = - trans * I * S 
+		dI = trans * I * S - reco * I
+		dR = reco * I
+
+		return dS, dI, dR
+
+	start = "01/22/20"
+	# start = "03/03/20"
+	finish = "3/31/21"
+
+	# start, finish = time_range
+
+	# n_bins = 300
+	n_bins = days_between(start, finish)
+
+	t = linspace(date_to_ut(start), date_to_ut(finish), n_bins)
+
+	y0 = [S_0, I_0, R_0]
+
+	sol = odeint(func, y0, t, args=(transition, recovery))
+
+	# print sol
+
+	sol = zip(*sol)
+
+
+
+	hist_s = make_hist(t, sol[0], "susceptible", 43)
+	hist_i = make_hist(t, sol[1], "infected", 46)
+	hist_r = make_hist(t, sol[2], "recovered", 30)
+
+	legend = make_legend((hist_s, hist_i, hist_r), 
+		("susceptible", "infected", "recovered"))
+
+
+	return hist_s, hist_i, hist_r, legend
+
+
+def fit_SIR(country, time_range):
+	s_data, i_data, r_data, leg = make_SIR(country)
+
+	def fcn(nPar, gin, f, par, flag):
+		tr = par[0]
+		rec = par[1] 
+		chi2 = 0.
+		n_bins = s_data.GetNbinsX()
+		s_model, i_model, r_model, leg = draw_SIR(tr, rec, time_range)
+		for i in range(1, n_bins+1):
+			dif = (i_data.GetBinContent(i) - i_model.GetBinContent(i)) / i_data.GetBinError(i)
+			chi2 += dif ** 2
+			dif = (r_data.GetBinContent(i) - r_model.GetBinContent(i)) / r_data.GetBinError(i)
+			chi2 += dif ** 2
+		f[0] = chi2
+		return
+
+	minuit = TMinuit(3)
+	minuit.SetFCN(fcn)
+
+	vstep = [1e-10, 1e-10]
+	vinit = [1e-10, 1e-10]
+	vmin = [1e-15, 1e-15]
+	vmax = [1e-5, 1e-5]
+
+	from ctypes import c_int, c_double
+	import array as c_arr
+
+	arglist = c_arr.array( 'd', 10*[0.] )
+	ierflag = 0
+	
+	arglist[0] = 1
+	minuit.mnexcm( "SET ERR", arglist, 1, c_int(ierflag) )
+
+	minuit.mnparm(0, "transition rate", vinit[0], vstep[0], vmin[0], vmax[0], c_int(ierflag))
+	minuit.mnparm(1, "recovery rate", vinit[1], vstep[1], vmin[1], vmax[1], c_int(ierflag))
+
+	# minuit.SetErrorDef(1.)
+
+	# minuit.SetMaxIteration(500)
+	# minuit.Migrad()
+	arglist[0] = 500
+	arglist[1] = 1.
+	minuit.mnexcm( "MIGRAD", arglist, 2, c_int(ierflag) )
+
+
+	res_trans = c_double(0.)
+	res_rec = c_double(0.)
+	err_trans = c_double(0.)
+	err_rec = c_double(0.)
+	
+	minuit.GetParameter(0, res_trans, err_trans)
+	minuit.GetParameter(1, res_rec, err_rec)
+
+	return res_trans.value, res_rec.value
+
+
+
+
+
