@@ -4,7 +4,13 @@ import time
 
 from ROOT import TGraphErrors, TF1, TMath, TCanvas, TPad, TH1D, TLegend
 
-
+populations = { "World"   : 7.774797e9,
+				"China"   : 1.439323776e9,
+				"US"      : 331.002651e6,
+				"Ukraine" : 43.733762e9,
+				"Italy"	  : 60.461826e6,
+				"France"  : 65.273511		
+}
 
 def plotGraphs(plot1, plot2):
 	c = TCanvas("name", "name", 1920, 1080)
@@ -62,9 +68,9 @@ def get_data(country, data_type):
 	time_series_number = [time_series_number[i][cut:] for i in range(0, len(time_series_number))]
 	time_series_number = zip(*time_series_number)
 
-	y = array([list(map(int, i)) for i in time_series_number])
+	y = array([list(map(float, i)) for i in time_series_number])
 
-	y = list(map(sum, y))
+	y = array(list(map(sum, y)))
 
 	x = array([date_to_ut(i) for i in time_series_date])
 	# print x
@@ -90,10 +96,10 @@ def make_hist(x, y, name, color):
 
 	for x_i, y_i, i in zip(x, y, range(1, len(x)+1)):
 		if y_i == 0.:
-			gr.SetBinContent(i, 0.)
+			gr.SetBinContent(i, 0. + 1e-10)
 			# gr.SetBinError(i, 0.)
 		else:
-			gr.SetBinContent(i, y_i + 0.001)
+			gr.SetBinContent(i, y_i + 1e-10)
 			gr.SetBinError(i, y_i*0.05)
 
 
@@ -113,16 +119,16 @@ def make_hist(x, y, name, color):
 
 	return gr
 
-def fit_hist(hist):
+def fit_hist(hist, date_0 = "03/15/20", date_1 = "03/31/20"):
 
-	func = TF1("exp", "expo", x[0], x[-1])
 	# func = TF1("exp", "[0]*pow(2., [1]*x)", x[0], x[-1])
 
-	start =  date_to_ut("03/15/20")
-	finish = date_to_ut("03/31/20")
+	start =  date_to_ut(date_0)
+	finish = date_to_ut(date_1)
 
+	func = TF1("exp", "expo", start, finish)
 
-	gr.Fit(func, "NI", "", start, finish)
+	hist.Fit(func, "NI", "", start, finish)
 	return func
 
 def print_slope(func):
@@ -135,6 +141,7 @@ def hist_from_data(country, data_type, color):
 	x, y = get_data(country, data_type)
 	
 	# y = diferentiate(y)
+	# y = diferentiate(y)
 	
 	return make_hist(x, y, data_type, color)
 
@@ -146,7 +153,41 @@ def make_legend(hists, names):
 
 	return l
 
+def make_SIR(country):
+	if country == "wo China":
+		pop = populations["World"] - populations["China"]
+	else:
+		pop = populations[country]
+
+	x, y_conf = get_data(country, "confirmed")
+	x, y_dead = get_data(country, "deaths")
+	x, y_rec = get_data(country, "recovered")
 
 
+	S = (- y_conf - y_dead - y_rec + pop) / pop 
+	I = (y_conf - y_dead - y_rec) / pop 
+	R = (y_dead + y_rec) / pop 
 
-# def make_
+	# print S,I,R
+	
+
+	hist_s = make_hist(x, S, "susceptible", 43)
+	hist_i = make_hist(x, I, "infected", 46)
+	hist_r = make_hist(x, R, "recovered", 30)
+
+	legend = make_legend((hist_s, hist_i, hist_r), 
+		("susceptible", "infected", "recovered"))
+
+
+	return hist_s, hist_i, hist_r, legend
+
+def make_def(country):
+
+	hist_conf = hist_from_data(country, "confirmed", 43)
+	hist_dead = hist_from_data(country, "deaths", 46)
+	hist_rec = hist_from_data(country, "recovered", 30)
+
+	legend = make_legend((hist_conf, hist_rec, hist_dead), 
+		("confirmed", "recovered", "deaths"))
+
+	return hist_conf, hist_dead, hist_rec, legend

@@ -11,16 +11,11 @@ country = "wo China"
 # country = "China"
 # country = "Ukraine"
 # country = "Italy"
+# country = "US"
 
-# x, y = get_data(country, "confirmed")
-# x, y = get_data(country, "deaths")
-# x, y = get_data(country, "recovered")
-# y = diferentiate(y)
-# y = diferentiate(y)
 
-hist_conf = hist_from_data(country, "confirmed", 43)
-hist_dead = hist_from_data(country, "deaths", 46)
-hist_rec = hist_from_data(country, "recovered", 30)
+# hist_conf, hist_dead, hist_rec, legend = make_SIR(country)
+hist_conf, hist_dead, hist_rec, legend = make_def(country)
 
 
 gStyle.SetOptStat(0)
@@ -36,8 +31,9 @@ hist_conf.Draw("MIN0 HIST E1")
 hist_rec.Draw("HIST E1 SAME")
 hist_dead.Draw("HIST E1 SAME")
 
-legend = make_legend((hist_conf, hist_rec, hist_dead), 
-	("confirmed", "recovered", "deaths"))
+# func_conf = fit_hist(hist_dead, "03/05/20", "03/26/20")
+# print_slope(func_conf)
+# func_conf.Draw("same")
 
 legend.Draw()
 
