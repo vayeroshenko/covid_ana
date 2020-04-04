@@ -8,7 +8,7 @@ from ROOT import TGraphErrors, TF1, TMath, TCanvas, TPad, TH1D, TLegend, TMinuit
 from tools import *
 
 
-class Plotter():
+class Plotter(object):
 	populations = { "World"   : 7.774797e9,
 					"China"   : 1.439323776e9,
 					"US"      : 331.002651e6,
@@ -26,6 +26,8 @@ class Plotter():
 	fill_greenish = 30
 
 
+	# names = ("confirmed", "deaths", "recovered")
+
 
 	def __init__(   self, country,
 					draw_seq = ("confirmed", "recovered", "deaths"),
@@ -36,7 +38,9 @@ class Plotter():
 					fit_end = "03/28/20",
 					fit_hist = "confirmed",
 					draw_fit = True   ):
+		super(Plotter, self).__init__()
 		
+
 		self.country = country
 
 		self.data = {
@@ -115,13 +119,15 @@ class Plotter():
 
 
 
-	def draw_cases(self):
+	def draw(self):
 		self.setup_graphics()
 
-		self.hists[self.sequence[0]].Draw("MIN0 HIST E1")
-		for i in range(1, len(self.sequence)):
-			self.hists[self.sequence[i]].Draw("HIST E1 SAME")
-		
+		for i in range(0, len(self.sequence)):
+			if i == 0:
+				self.hists[self.sequence[0]].Draw("MIN0 HIST E1")
+			else:
+				self.hists[self.sequence[i]].Draw("HIST E1 SAME")
+			
 		if self.has_fit and self.draw_fit:
 			self.func.Draw("same")
 
@@ -175,7 +181,6 @@ class Plotter():
 
 	def make_legend(self):
 		l = TLegend(0.15, 0.85, 0.4, 0.7)
-		names = ("confirmed", "deaths", "recovered")
 
 		if self.country != "wo China":
 			l.SetHeader(self.country, "c")
@@ -237,4 +242,4 @@ if __name__ == "__main__":
 		)
 
 
-	plotter.draw_cases()
+	plotter.draw()
