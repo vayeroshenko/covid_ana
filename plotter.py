@@ -125,8 +125,10 @@ class Plotter(object):
 		# self.draw()
 
 
-	def draw(self):
+	def draw(self, log = False):
 		self.setup_graphics()
+		if log:
+			self.c.SetLogy()
 
 		for i in range(0, len(self.sequence)):
 			if i == 0:
@@ -265,4 +267,4 @@ if __name__ == "__main__":
 
 	plotter.zoom_axis("03/15/20","04/03/20")
 
-	plotter.draw()
+	plotter.draw(log = True)

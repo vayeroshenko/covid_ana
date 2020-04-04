@@ -31,6 +31,10 @@ plotter.draw()
 
 plotter.c.Print(filename+"(","pdf")
 
+plotter.draw(log = True)
+plotter.c.Print(filename,"pdf")
+
+
 plotter.clear()
 #################################
 
@@ -48,6 +52,10 @@ plotter.zoom_axis(month_ago, fit_finish)
 plotter.draw()
 
 plotter.c.Print(filename,"pdf")
+
+plotter.draw(log = True)
+plotter.c.Print(filename,"pdf")
+
 
 plotter.clear()
 #################################
@@ -101,6 +109,9 @@ plotter = Plotter("wo China",
 plotter.zoom_axis(month_ago, fit_finish)
 plotter.draw()
 
+plotter.c.Print(filename,"pdf")
+
+plotter.draw(log = True)
 plotter.c.Print(filename+")","pdf")
 
 
