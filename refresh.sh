@@ -14,4 +14,11 @@ git pull
 sed -i "s/Korea, South/Korea South/g" ./csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
 sed -i "s/Korea, South/Korea South/g" ./csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv
 sed -i "s/Korea, South/Korea South/g" ./csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv
+
+sed -i "s/Bonaire, Sint Eustatius and Saba/Bonaire Sint Eustatius and Saba/g" ./csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv
+sed -i "s/Bonaire, Sint Eustatius and Saba/Bonaire Sint Eustatius and Saba/g" ./csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv
+sed -i "s/Bonaire, Sint Eustatius and Saba/Bonaire Sint Eustatius and Saba/g" ./csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv
+
+
 cd ..
+

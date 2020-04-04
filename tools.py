@@ -1,16 +1,18 @@
 from numpy import genfromtxt, array, linspace
 from datetime import datetime
 import time
+from math import exp, sqrt
 
 from ROOT import TGraphErrors, TF1, TMath, TCanvas, TPad, TH1D, TLegend, TMinuit
 
 populations = { "World"   : 7.774797e9,
 				"China"   : 1.439323776e9,
 				"US"      : 331.002651e6,
-				"Ukraine" : 43.733762e9,
+				"Ukraine" : 43.733762e6,
 				"Italy"	  : 60.461826e6,
 				"France"  : 65.273511e6,
-				"India"   : 1.380004385e9			
+				"India"   : 1.380004385e9,	
+				"Spain"   : 46.750411e6		
 }
 
 def plotGraphs(plot1, plot2):
@@ -100,15 +102,16 @@ def make_hist(x, y, name, color):
 
 	for x_i, y_i, i in zip(x, y, range(1, len(x)+1)):
 		if y_i == 0.:
-			gr.SetBinContent(i, 0. + 1e-10)
+			gr.SetBinContent(i, 0. + 1e-20)
 			# gr.SetBinError(i, 0.)
 		else:
-			gr.SetBinContent(i, y_i + 1e-10)
-			gr.SetBinError(i, y_i*0.05)
+			gr.SetBinContent(i, y_i + 1e-20)
+			# gr.SetBinError(i, y_i*0.05)
+			gr.SetBinError(i, sqrt(y_i))
 
 
 
-	gr.Sumw2()
+	# gr.Sumw2()
 	gr.GetXaxis().SetTimeDisplay(1)
 	gr.SetLineColor(color)
 	gr.SetMarkerStyle(21)
@@ -138,7 +141,11 @@ def fit_hist(hist, date_0 = "03/15/20", date_1 = "03/31/20"):
 def print_slope(func):
 	slope = func.GetParameter(1)
 	doubling = calc_doubling(slope)
+
+	in_one_day = exp(slope * 24 * 3600)
+
 	print "doubling: \t{} days".format(doubling)
+	print "tomorrow will be {} times more".format(in_one_day)
 
 
 def hist_from_data(country, data_type, color):
@@ -202,9 +209,14 @@ from scipy.integrate import odeint
 
 
 def draw_SIR(transition, recovery, time_range):
-	S_0 = 1.
-	I_0 = 8. / (populations["World"] - populations["China"])
-	R_0 = 0.
+	# S_0 = 1.
+	# I_0 = 8. / (populations["World"] - populations["China"])
+	# I_0 = 1. / populations["Italy"]
+	# R_0 = 0.
+
+	I_0 = 0.35e-6
+	R_0 = 31.3646819e-9
+	S_0 = 1. - I_0 - R_0
 
 	def func(y, t, trans, reco):
 		S, I, R = y
@@ -215,12 +227,13 @@ def draw_SIR(transition, recovery, time_range):
 		return dS, dI, dR
 
 	start = "01/22/20"
+	# start = "01/29/20"
 	# start = "03/03/20"
-	finish = "3/31/21"
+	finish = "4/01/20"
 
 	# start, finish = time_range
 
-	# n_bins = 300
+	# n_bins = 1000
 	n_bins = days_between(start, finish)
 
 	t = linspace(date_to_ut(start), date_to_ut(finish), n_bins)
@@ -267,9 +280,10 @@ def fit_SIR(country, time_range):
 	minuit.SetFCN(fcn)
 
 	vstep = [1e-10, 1e-10]
-	vinit = [1e-10, 1e-10]
+	# vinit = [1e-10, 1e-10]
+	vinit = [1e-3, 1e-3]
 	vmin = [1e-15, 1e-15]
-	vmax = [1e-5, 1e-5]
+	vmax = [1e0, 1e0]
 
 	from ctypes import c_int, c_double
 	import array as c_arr
