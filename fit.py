@@ -5,7 +5,7 @@ from plotter_sir import Plotter_SIR
 
 ############### To draw number of cases #################
 
-plotter = Plotter("Ukraine",
+plotter = Plotter("France",
 		draw_seq = ("confirmed", "deaths", "recovered"),
 		fit_start = "03/30/20",
 		fit_end = "04/03/20",

@@ -3,7 +3,8 @@ from datetime import datetime
 import time
 from math import exp, sqrt
 
-from ROOT import TGraphErrors, TF1, TMath, TCanvas, TPad, TH1D, TLegend, TMinuit
+from ROOT import 	TGraphErrors, TF1, TMath, TCanvas, TPad, TH1D, \
+					TPaveLabel, TLegend, TMinuit, TPaveText
 
 from tools import *
 
@@ -74,10 +75,6 @@ class Plotter(object):
 
 		self.has_fit = True
 
-		print_slope(self.func)
-
-
-
 
 	def make_hist(self, x, y, name, color):
 		gr = TH1D(name, name, len(x), x[0], x[-1]) 
@@ -118,6 +115,15 @@ class Plotter(object):
 		return self.make_hist(x, y, data_type, color)
 
 
+	def zoom_axis(self, begin, end):
+		begin = date_to_ut(begin)
+		end = date_to_ut(end)
+
+		for key in self.hists:
+			self.hists[key].GetXaxis().SetRangeUser(begin, end)
+
+		# self.draw()
+
 
 	def draw(self):
 		self.setup_graphics()
@@ -127,16 +133,30 @@ class Plotter(object):
 				self.hists[self.sequence[0]].Draw("MIN0 HIST E1")
 			else:
 				self.hists[self.sequence[i]].Draw("HIST E1 SAME")
+		
+		self.legend.Draw()
 			
 		if self.has_fit and self.draw_fit:
 			self.func.Draw("same")
+			doubling, oneday = print_slope(self.func)
+			self.text = TPaveText(0.15, 0.65, 0.4, 0.55)
+			self.text.AddText("Doubles every {} days".format(doubling))
+			self.text.AddText("Multiplies by {} every day".format(oneday))
+			newpad = TPad("newpad","a transparent pad",0,0,1,1);
+			newpad.SetFillStyle(4000);
+			newpad.Draw()
+			newpad.cd()
 
-		self.legend.Draw()
-		input()
+			self.text.Draw()
+
+		# input()
 
 	def setup_graphics(self):
 		gStyle.SetOptStat(0)
+		gStyle.SetOptTitle(0)
+
 		gROOT.ForceStyle()
+
 
 		self.c = TCanvas("c", "c", 1920, 1080)
 
@@ -149,8 +169,6 @@ class Plotter(object):
 			else:
 				gr.SetBinContent(i, y_i + 1e-30)
 				gr.SetBinError(i, 0.05 * y_i)
-
-
 
 		# gr.Sumw2()
 		gr.GetXaxis().SetTimeDisplay(1)
@@ -185,7 +203,7 @@ class Plotter(object):
 		if self.country != "wo China":
 			l.SetHeader(self.country, "c")
 		else:
-			l.SetHeader("World (without mainland China)", "c")
+			l.SetHeader("World (without Mainland China)", "c")
 
 		for name in self.hists:
 			l.AddEntry(self.hists[name], name)
@@ -227,8 +245,11 @@ class Plotter(object):
 		return x, y
 
 
-
-
+	def clear(self):
+		for key in self.hists:
+			self.hists[key].Delete()
+		self.func.Delete()
+		self.c.Delete()
 
 
 if __name__ == "__main__":
@@ -237,9 +258,11 @@ if __name__ == "__main__":
 		draw_seq = ("confirmed", "deaths", "recovered"),
 		fit_start = "03/30/20",
 		fit_end = "04/03/20",
-		draw_fit = False,
+		draw_fit = True,
 		derivative = 0
 		)
 
+
+	plotter.zoom_axis("03/15/20","04/03/20")
 
 	plotter.draw()

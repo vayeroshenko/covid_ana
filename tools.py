@@ -50,6 +50,8 @@ def print_slope(func):
 	print "doubling: \t{} days".format(doubling)
 	print "tomorrow will be {} times more".format(in_one_day)
 
+	return doubling,  in_one_day
+
 
 # TODO
 def fit_hist_with_kinks():
