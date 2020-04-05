@@ -22,3 +22,4 @@ sed -i "s/Bonaire, Sint Eustatius and Saba/Bonaire Sint Eustatius and Saba/g" ./
 
 cd ..
 
+python daily_report.py

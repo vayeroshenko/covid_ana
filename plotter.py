@@ -31,14 +31,14 @@ class Plotter(object):
 
 
 	def __init__(   self, country,
-					draw_seq = ("confirmed", "recovered", "deaths"),
-					derivative = 0,
+					draw_seq     = ("confirmed", "recovered", "deaths"),
+					derivative   = 0,
 					
-					to_fit = True,
-					fit_start = "03/22/20",
-					fit_end = "03/28/20",
-					fit_hist = "confirmed",
-					draw_fit = True   ):
+					to_fit       = True,
+					fit_start    = "03/22/20",
+					fit_end      = "03/28/20",
+					fit_hist     = "confirmed",
+					draw_fit     = True   ):
 		super(Plotter, self).__init__()
 		
 
@@ -85,8 +85,8 @@ class Plotter(object):
 				# gr.SetBinError(i, 0.)
 			else:
 				gr.SetBinContent(i, y_i + 1e-20)
-				# gr.SetBinError(i, y_i*0.05)
-				gr.SetBinError(i, sqrt(y_i))
+				gr.SetBinError(i, y_i*0.05)
+				# gr.SetBinError(i, sqrt(y_i))
 
 
 
@@ -140,15 +140,15 @@ class Plotter(object):
 			
 		if self.has_fit and self.draw_fit:
 			self.func.Draw("same")
+			
 			doubling, oneday = print_slope(self.func)
-			self.text = TPaveText(0.15, 0.65, 0.4, 0.55)
+			newpad = TPad("newpad","a transparent pad",0.15, 0.65, 0.4, 0.55);
+			self.text = TPaveText(0.1, 0.1, 0.9, 0.9)
 			self.text.AddText("Doubles every {} days".format(doubling))
 			self.text.AddText("Multiplies by {} every day".format(oneday))
-			newpad = TPad("newpad","a transparent pad",0,0,1,1);
 			newpad.SetFillStyle(4000);
 			newpad.Draw()
 			newpad.cd()
-
 			self.text.Draw()
 
 		# input()
@@ -256,15 +256,33 @@ class Plotter(object):
 
 if __name__ == "__main__":
 	# plotter = Plotter("wo China")
-	plotter = Plotter("Ukraine",
-		draw_seq = ("confirmed", "deaths", "recovered"),
-		fit_start = "03/30/20",
+	# plotter = Plotter("Ukraine",
+	# 	draw_seq = ("confirmed", "deaths", "recovered"),
+	# 	fit_start = "03/30/20",
+	# 	fit_end = "04/03/20",
+	# 	draw_fit = True,
+	# 	derivative = 0
+	# 	)
+
+	plotter = Plotter("Italy",
+		draw_seq = ("confirmed", "recovered", "deaths"),
+		fit_start = "02/26/20",
 		fit_end = "04/03/20",
 		draw_fit = True,
 		derivative = 0
 		)
 
+	# plotter = Plotter("China",
+	# 	draw_seq    = ("confirmed", "recovered", "deaths"),
+	# 	fit_hist    = "confirmed",
+	# 	fit_start   = "01/22/20",
+	# 	fit_end     = "04/03/20",
+	# 	draw_fit    = True,
+	# 	derivative  = 0
+	# 	)
 
-	plotter.zoom_axis("03/15/20","04/03/20")
 
-	plotter.draw(log = True)
+
+	# plotter.zoom_axis("02/19/20","04/03/20")
+
+	plotter.draw(log = False)
