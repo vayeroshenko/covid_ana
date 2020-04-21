@@ -35,7 +35,7 @@ class Plotter_SIR(Plotter):
 	def make_SIR(self):
 
 		if self.country == "wo China":
-			pop = self.populations["World"] - populations["China"]
+			pop = self.populations["World"] - self.populations["China"]
 		else:
 			pop = self.populations[self.country]
 
@@ -192,7 +192,7 @@ class Plotter_SIR(Plotter):
 
 if __name__ == "__main__":
 	# plotter = Plotter("wo China")
-	plotter = Plotter_SIR("Ukraine",
+	plotter = Plotter_SIR("Italy",
 		draw_seq = ("infected", "recovered"),
 		to_fit = False
 		)

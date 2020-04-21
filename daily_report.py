@@ -1,5 +1,7 @@
 from datetime import date, timedelta
 from plotter import Plotter
+from plotter_sir import Plotter_SIR
+
 
 
 
@@ -23,7 +25,7 @@ def make_daily_report(day):
 
 	###############################
 	plotter = Plotter("Ukraine",
-		draw_seq = ("confirmed", "deaths", "recovered"),
+		draw_seq = ("confirmed", "recovered", "deaths"),
 		fit_start = fit_start,
 		fit_end = fit_finish,
 		draw_fit = True,
@@ -43,7 +45,61 @@ def make_daily_report(day):
 	#################################
 
 	###############################
+	plotter = Plotter("Ukraine",
+		draw_seq = ("confirmed", "recovered", "deaths"),
+		to_fit = False,
+		draw_fit = False,
+		derivative = 1
+		)
+
+	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.draw()
+
+	plotter.c.Print(filename,"pdf")
+
+
+	plotter.clear()
+	#################################
+
+	###############################
+	plotter = Plotter_SIR("Ukraine",
+		draw_seq = ("infected", "recovered"),
+		to_fit = False
+		)
+
+	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.draw()
+
+	plotter.c.Print(filename,"pdf")
+
+
+	plotter.clear()
+	#################################
+
+	###############################
 	plotter = Plotter("Russia",
+		draw_seq = ("confirmed", "recovered", "deaths"),
+		fit_start = fit_start,
+		fit_end = fit_finish,
+		draw_fit = True,
+		derivative = 0
+		)
+
+	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.draw()
+
+	plotter.c.Print(filename,"pdf")
+
+	# plotter.draw(log = True)
+	# plotter.c.Print(filename,"pdf")
+
+
+	plotter.clear()
+	#################################
+
+
+	###############################
+	plotter = Plotter("Belarus",
 		draw_seq = ("confirmed", "recovered", "deaths"),
 		fit_start = fit_start,
 		fit_end = fit_finish,
@@ -84,6 +140,22 @@ def make_daily_report(day):
 
 	plotter.clear()
 	#################################
+
+	###############################
+	plotter = Plotter_SIR("Italy",
+		draw_seq = ("infected", "recovered"),
+		to_fit = False
+		)
+
+	plotter.zoom_axis(two_month_ago, fit_finish)
+	plotter.draw()
+
+	plotter.c.Print(filename,"pdf")
+
+
+	plotter.clear()
+	#################################
+
 
 	###############################
 	plotter = Plotter("Spain",
@@ -157,6 +229,22 @@ def make_daily_report(day):
 	plotter.c.Print(filename,"pdf")
 
 	plotter.draw(log = True)
+	plotter.c.Print(filename,"pdf")
+
+
+	plotter.clear()
+	#################################
+
+
+	###############################
+	plotter = Plotter_SIR("wo China",
+		draw_seq = ("infected", "recovered"),
+		to_fit = False
+		)
+
+	plotter.zoom_axis(two_month_ago, fit_finish)
+	plotter.draw()
+
 	plotter.c.Print(filename+")","pdf")
 
 

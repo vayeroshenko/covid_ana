@@ -250,27 +250,39 @@ class Plotter(object):
 	def clear(self):
 		for key in self.hists:
 			self.hists[key].Delete()
-		self.func.Delete()
+		try:
+			self.func.Delete()
+		except:
+			pass
 		self.c.Delete()
 
 
 if __name__ == "__main__":
 	# plotter = Plotter("wo China")
 	# plotter = Plotter("Ukraine",
-	# 	draw_seq = ("confirmed", "deaths", "recovered"),
-	# 	fit_start = "03/30/20",
-	# 	fit_end = "04/03/20",
+	# 	# draw_seq = ("confirmed", "deaths", "recovered"),
+	# 	fit_start = "04/04/20",
+	# 	fit_end = "04/06/20",
 	# 	draw_fit = True,
 	# 	derivative = 0
 	# 	)
-
+	
 	plotter = Plotter("Italy",
-		draw_seq = ("confirmed", "recovered", "deaths"),
-		fit_start = "02/26/20",
-		fit_end = "04/03/20",
-		draw_fit = True,
-		derivative = 0
+		# draw_seq = ("confirmed", "deaths", "recovered"),
+		to_fit = False,
+		# fit_start = "04/04/20",
+		# fit_end = "04/06/20",
+		# draw_fit = False,
+		derivative = 1
 		)
+
+	# plotter = Plotter("France",
+	# 	draw_seq = ("confirmed", "recovered", "deaths"),
+	# 	fit_start = "04/01/20",
+	# 	fit_end = "04/06/20",
+	# 	draw_fit = True,
+	# 	derivative = 0
+	# 	)
 
 	# plotter = Plotter("China",
 	# 	draw_seq    = ("confirmed", "recovered", "deaths"),
