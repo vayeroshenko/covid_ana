@@ -134,9 +134,25 @@ def make_daily_report(day):
 
 	plotter.c.Print(filename,"pdf")
 
-	plotter.draw(log = True)
-	plotter.c.Print(filename,"pdf")
+	# plotter.draw(log = True)
+	# plotter.c.Print(filename,"pdf")
 
+
+	plotter.clear()
+	#################################
+
+	###############################
+	plotter = Plotter("Italy",
+		draw_seq = ("confirmed", "recovered", "deaths"),
+		to_fit = False,
+		draw_fit = False,
+		derivative = 1
+		)
+
+	plotter.zoom_axis(two_month_ago, fit_finish)
+	plotter.draw()
+
+	plotter.c.Print(filename,"pdf")
 
 	plotter.clear()
 	#################################
