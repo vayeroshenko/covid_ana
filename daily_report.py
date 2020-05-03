@@ -10,7 +10,9 @@ def make_daily_report(day):
 	fit_start = (day - timedelta(days = 4)).strftime("%m/%d/%y")
 	fit_finish = day.strftime("%m/%d/%y")
 	month_ago = (day- timedelta(days = 30)).strftime("%m/%d/%y")
-	two_month_ago = (day - timedelta(days = 60)).strftime("%m/%d/%y")
+	two_month_ago = (day - timedelta(days = 61)).strftime("%m/%d/%y")
+	three_month_ago = (day - timedelta(days = 91)).strftime("%m/%d/%y")
+	four_month_ago = (day - timedelta(days = 122)).strftime("%m/%d/%y")
 
 
 
@@ -32,7 +34,7 @@ def make_daily_report(day):
 		derivative = 0
 		)
 
-	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.zoom_axis(two_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename+"(","pdf")
@@ -52,7 +54,7 @@ def make_daily_report(day):
 		derivative = 1
 		)
 
-	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.zoom_axis(two_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -67,7 +69,7 @@ def make_daily_report(day):
 		to_fit = False
 		)
 
-	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.zoom_axis(two_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -129,7 +131,7 @@ def make_daily_report(day):
 		derivative = 0
 		)
 
-	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.zoom_axis(three_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -149,7 +151,7 @@ def make_daily_report(day):
 		derivative = 1
 		)
 
-	plotter.zoom_axis(two_month_ago, fit_finish)
+	plotter.zoom_axis(three_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -163,7 +165,22 @@ def make_daily_report(day):
 		to_fit = False
 		)
 
-	plotter.zoom_axis(two_month_ago, fit_finish)
+	plotter.zoom_axis(three_month_ago, fit_finish)
+	plotter.draw()
+
+	plotter.c.Print(filename,"pdf")
+
+
+	plotter.clear()
+	#################################
+
+	###############################
+	plotter = Plotter_SIR("China",
+		draw_seq = ("recovered", "infected"),
+		to_fit = False
+		)
+
+	plotter.zoom_axis(four_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -182,7 +199,7 @@ def make_daily_report(day):
 		derivative = 0
 		)
 
-	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.zoom_axis(two_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -202,7 +219,7 @@ def make_daily_report(day):
 		derivative = 0
 		)
 
-	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.zoom_axis(two_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -220,7 +237,7 @@ def make_daily_report(day):
 		derivative = 0
 		)
 
-	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.zoom_axis(two_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -239,7 +256,7 @@ def make_daily_report(day):
 		derivative = 0
 		)
 
-	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.zoom_axis(three_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -258,7 +275,7 @@ def make_daily_report(day):
 		to_fit = False
 		)
 
-	plotter.zoom_axis(two_month_ago, fit_finish)
+	plotter.zoom_axis(three_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename+")","pdf")
