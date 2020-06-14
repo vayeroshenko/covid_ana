@@ -14,13 +14,14 @@ from plotter import Plotter
 # __metaclass__ = type
 class Plotter_SIR(Plotter):
 	def __init__(   self, country,
-					draw_seq = ("susceptible", "recovered", "infected"),
-					derivative = 0,
-					to_fit = True,
-					fit_start = "03/22/20",
-					fit_end = "03/28/20",
-					fit_hist = "confirmed",
-					draw_fit = True   ):
+					draw_seq 			= ("susceptible", "recovered", "infected"),
+					derivative 			= 0,
+					to_fit 				= True,
+					fit_start 			= "03/22/20",
+					fit_end 			= "03/28/20",
+					fit_hist 			= "confirmed",
+					draw_fit 			= True,
+					floating_average 	= -1   ):
 		super(Plotter_SIR, self).__init__(  country, 
 											draw_seq,
 											derivative,
@@ -28,7 +29,8 @@ class Plotter_SIR(Plotter):
 											fit_start,
 											fit_end,
 											fit_hist,
-											draw_fit)
+											draw_fit, 
+											floating_average)
 		self.make_SIR()
 
 

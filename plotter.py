@@ -31,14 +31,15 @@ class Plotter(object):
 
 
 	def __init__(   self, country,
-					draw_seq     = ("confirmed", "recovered", "deaths"),
-					derivative   = 0,
+					draw_seq     		= ("confirmed", "recovered", "deaths"),
+					derivative   		= 0,
 					
-					to_fit       = True,
-					fit_start    = "03/22/20",
-					fit_end      = "03/28/20",
-					fit_hist     = "confirmed",
-					draw_fit     = True   ):
+					to_fit       		= True,
+					fit_start    		= "03/22/20",
+					fit_end      		= "03/28/20",
+					fit_hist     		= "confirmed",
+					draw_fit     		= True,
+					floating_average 	= -1   ):
 		super(Plotter, self).__init__()
 		
 
@@ -65,6 +66,9 @@ class Plotter(object):
 
 		if to_fit:
 			self.fit()
+
+		if floating_average != -1:
+			self.do_floating_average(floating_average)
 
 
 
@@ -256,25 +260,48 @@ class Plotter(object):
 			pass
 		self.c.Delete()
 
+	def do_floating_average(self, length):
+		for key in self.hists:
+			nBins = self.hists[key].GetNbinsX()
+			temp_length = length
+			for bin_i in range(1, nBins + 1):
+				if bin_i  < length:
+					temp_length = bin_i
+				average_value = 0
+				total_error = 0
+				for float_i in range(bin_i - temp_length + 1, bin_i + 1):
+					average_value += self.hists[key].GetBinContent(float_i)
+					total_error += self.hists[key].GetBinError(float_i)**2
+				average_value /= temp_length
+				total_error = sqrt(total_error) / temp_length
+
+				self.hists[key].SetBinContent(bin_i, average_value)
+				self.hists[key].SetBinError(bin_i, total_error)
+
+				temp_length = length
+		return
+
+
 
 if __name__ == "__main__":
 	# plotter = Plotter("wo China")
-	# plotter = Plotter("Ukraine",
-	# 	# draw_seq = ("confirmed", "deaths", "recovered"),
-	# 	fit_start = "04/04/20",
-	# 	fit_end = "04/06/20",
-	# 	draw_fit = True,
-	# 	derivative = 0
-	# 	)
-	
-	plotter = Plotter("Italy",
+	plotter = Plotter("Ukraine",
 		# draw_seq = ("confirmed", "deaths", "recovered"),
-		to_fit = False,
-		# fit_start = "04/04/20",
-		# fit_end = "04/06/20",
-		# draw_fit = False,
-		derivative = 1
+		fit_start = "04/04/20",
+		fit_end = "04/06/20",
+		draw_fit = False,
+		derivative = 1,
+		floating_average = 7
 		)
+	
+	# plotter = Plotter("Italy",
+	# 	# draw_seq = ("confirmed", "deaths", "recovered"),
+	# 	to_fit = False,
+	# 	# fit_start = "04/04/20",
+	# 	# fit_end = "04/06/20",
+	# 	# draw_fit = False,
+	# 	derivative = 1
+	# 	)
 
 	# plotter = Plotter("France",
 	# 	draw_seq = ("confirmed", "recovered", "deaths"),

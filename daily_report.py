@@ -13,6 +13,7 @@ def make_daily_report(day):
 	two_month_ago = (day - timedelta(days = 61)).strftime("%m/%d/%y")
 	three_month_ago = (day - timedelta(days = 91)).strftime("%m/%d/%y")
 	four_month_ago = (day - timedelta(days = 122)).strftime("%m/%d/%y")
+	five_month_ago = (day - timedelta(days = 152)).strftime("%m/%d/%y")
 
 
 
@@ -30,17 +31,17 @@ def make_daily_report(day):
 		draw_seq = ("confirmed", "recovered", "deaths"),
 		fit_start = fit_start,
 		fit_end = fit_finish,
-		draw_fit = True,
+		draw_fit = False,
 		derivative = 0
 		)
 
-	plotter.zoom_axis(two_month_ago, fit_finish)
+	plotter.zoom_axis(three_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename+"(","pdf")
 
-	plotter.draw(log = True)
-	plotter.c.Print(filename,"pdf")
+	# plotter.draw(log = True)
+	# plotter.c.Print(filename,"pdf")
 
 
 	plotter.clear()
@@ -51,10 +52,11 @@ def make_daily_report(day):
 		draw_seq = ("confirmed", "recovered", "deaths"),
 		to_fit = False,
 		draw_fit = False,
-		derivative = 1
+		derivative = 1,
+		floating_average = 4
 		)
 
-	plotter.zoom_axis(two_month_ago, fit_finish)
+	plotter.zoom_axis(three_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -69,7 +71,7 @@ def make_daily_report(day):
 		to_fit = False
 		)
 
-	plotter.zoom_axis(two_month_ago, fit_finish)
+	plotter.zoom_axis(three_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -83,11 +85,12 @@ def make_daily_report(day):
 		draw_seq = ("confirmed", "recovered", "deaths"),
 		fit_start = fit_start,
 		fit_end = fit_finish,
-		draw_fit = True,
-		derivative = 0
+		draw_fit = False,
+		derivative = 1,
+		floating_average = 3
 		)
 
-	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.zoom_axis(three_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -102,14 +105,15 @@ def make_daily_report(day):
 
 	###############################
 	plotter = Plotter("Belarus",
-		draw_seq = ("confirmed", "recovered", "deaths"),
+		draw_seq = ("recovered", "confirmed", "deaths"),
 		fit_start = fit_start,
 		fit_end = fit_finish,
-		draw_fit = True,
-		derivative = 0
+		draw_fit = False,
+		derivative = 1,
+		floating_average = 3
 		)
 
-	plotter.zoom_axis(month_ago, fit_finish)
+	plotter.zoom_axis(three_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -123,24 +127,24 @@ def make_daily_report(day):
 
 
 	###############################
-	plotter = Plotter("Italy",
-		draw_seq = ("confirmed", "recovered", "deaths"),
-		fit_start = fit_start,
-		fit_end = fit_finish,
-		draw_fit = True,
-		derivative = 0
-		)
+	# plotter = Plotter("Italy",
+	# 	draw_seq = ("confirmed", "recovered", "deaths"),
+	# 	fit_start = fit_start,
+	# 	fit_end = fit_finish,
+	# 	draw_fit = False,
+	# 	derivative = 0
+	# 	)
 
-	plotter.zoom_axis(three_month_ago, fit_finish)
-	plotter.draw()
+	# plotter.zoom_axis(four_month_ago, fit_finish)
+	# plotter.draw()
 
-	plotter.c.Print(filename,"pdf")
-
-	# plotter.draw(log = True)
 	# plotter.c.Print(filename,"pdf")
 
+	# # plotter.draw(log = True)
+	# # plotter.c.Print(filename,"pdf")
 
-	plotter.clear()
+
+	# plotter.clear()
 	#################################
 
 	###############################
@@ -148,10 +152,11 @@ def make_daily_report(day):
 		draw_seq = ("confirmed", "recovered", "deaths"),
 		to_fit = False,
 		draw_fit = False,
-		derivative = 1
+		derivative = 1,
+		floating_average = 3
 		)
 
-	plotter.zoom_axis(three_month_ago, fit_finish)
+	plotter.zoom_axis(five_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -161,11 +166,11 @@ def make_daily_report(day):
 
 	###############################
 	plotter = Plotter_SIR("Italy",
-		draw_seq = ("infected", "recovered"),
+		draw_seq = ("recovered", "infected"),
 		to_fit = False
 		)
 
-	plotter.zoom_axis(three_month_ago, fit_finish)
+	plotter.zoom_axis(five_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -180,7 +185,7 @@ def make_daily_report(day):
 		to_fit = False
 		)
 
-	plotter.zoom_axis(four_month_ago, fit_finish)
+	plotter.zoom_axis(five_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -195,11 +200,12 @@ def make_daily_report(day):
 		draw_seq = ("confirmed", "recovered", "deaths"),
 		fit_start = fit_start,
 		fit_end = fit_finish,
-		draw_fit = True,
-		derivative = 0
+		draw_fit = False,
+		derivative = 1,
+		floating_average = 5
 		)
 
-	plotter.zoom_axis(two_month_ago, fit_finish)
+	plotter.zoom_axis(four_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -215,11 +221,12 @@ def make_daily_report(day):
 		draw_seq = ("confirmed", "recovered", "deaths"),
 		fit_start = fit_start,
 		fit_end = fit_finish,
-		draw_fit = True,
-		derivative = 0
+		draw_fit = False,
+		derivative = 1,
+		floating_average = 5
 		)
 
-	plotter.zoom_axis(two_month_ago, fit_finish)
+	plotter.zoom_axis(four_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -233,11 +240,12 @@ def make_daily_report(day):
 		draw_seq = ("confirmed", "recovered", "deaths"),
 		fit_start = fit_start,
 		fit_end = fit_finish,
-		draw_fit = True,
-		derivative = 0
+		draw_fit = False,
+		derivative = 1,
+		floating_average = 3
 		)
 
-	plotter.zoom_axis(two_month_ago, fit_finish)
+	plotter.zoom_axis(four_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename,"pdf")
@@ -252,8 +260,9 @@ def make_daily_report(day):
 		draw_seq = ("confirmed", "recovered", "deaths"),
 		fit_start = fit_start,
 		fit_end = fit_finish,
-		draw_fit = True,
-		derivative = 0
+		draw_fit = False,
+		derivative = 1,
+		floating_average = 3
 		)
 
 	plotter.zoom_axis(three_month_ago, fit_finish)
@@ -261,8 +270,8 @@ def make_daily_report(day):
 
 	plotter.c.Print(filename,"pdf")
 
-	plotter.draw(log = True)
-	plotter.c.Print(filename,"pdf")
+	# plotter.draw(log = True)
+	# plotter.c.Print(filename,"pdf")
 
 
 	plotter.clear()
@@ -275,7 +284,7 @@ def make_daily_report(day):
 		to_fit = False
 		)
 
-	plotter.zoom_axis(three_month_ago, fit_finish)
+	plotter.zoom_axis(four_month_ago, fit_finish)
 	plotter.draw()
 
 	plotter.c.Print(filename+")","pdf")
